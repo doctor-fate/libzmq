@@ -578,6 +578,14 @@ int zmq_msg_init_data (
       ->init_data (data_, size_, ffn_, hint_);
 }
 
+int zmq_msg_init_exstorage (
+  zmq_msg_t *msg_, void *data_, size_t size_, zmq_free_fn *ffn_, void *hint_)
+{
+    const auto content = reinterpret_cast<zmq::msg_t::content_t *>(data_);
+    return (reinterpret_cast<zmq::msg_t *> (msg_))
+      ->init_external_storage (content, content + 1, size_ - sizeof(*content), ffn_, hint_);
+}
+
 int zmq_msg_send (zmq_msg_t *msg_, void *s_, int flags_)
 {
     zmq::socket_base_t *s = as_socket_base_t (s_);
